@@ -12,12 +12,6 @@ const projectSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    episodes: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Episode",
-      },
-    ],
   },
   {
     timestamps: true,

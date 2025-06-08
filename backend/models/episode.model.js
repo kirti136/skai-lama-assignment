@@ -11,10 +11,10 @@ const episodeSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    status: {
-      type: String,
-      enum: ["in-progress", "completed"],
-      default: "in-progress",
+    projectId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Project",
+      required: true,
     },
   },
   {
