@@ -18,7 +18,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/user", routes.userRouter);
-// app.use("/api/project", routes.projectRouter);
+app.use("/api/project", routes.projectRouter);
 // app.use("/api/episode", routes.episodeRouter);
 
 connectDB();
