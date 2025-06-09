@@ -74,10 +74,10 @@ exports.login = async (req, res) => {
     // Set cookie
     res.cookie("token", "Bearer " + token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production", // Only secure in production
-      sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+      secure: true,
+      sameSite: 'none',
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
-      domain: process.env.NODE_ENV === "production" ? undefined : "localhost",
+    
     });
 
     res.status(200).json({
