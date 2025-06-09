@@ -13,12 +13,14 @@ import { RiShare2Fill } from "react-icons/ri";
 import { SiRss } from "react-icons/si";
 import { useLocation } from "react-router-dom";
 import CreateEpisodes from "../components/CreateEpisodes";
+import EditTranscript from "../components/EditTranscript";
 
 const UploadPage = () => {
   const location = useLocation();
   const project = location.state?.project;
   const [episodes, setEpisodes] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedEpisode, setSelectedEpisode] = useState(null);
 
   useEffect(() => {
     const fetchEpisodes = async () => {
@@ -257,297 +259,315 @@ const UploadPage = () => {
           </div>
         </div>
 
-        {/* Title */}
-        <h2
-          style={{
-            fontSize: "24px",
-            color: "#111827",
-            fontWeight: 600,
-            marginBottom: "2rem",
-          }}
-        >
-          Add Podcast
-        </h2>
+        {/* Add Podcast */}
+        {!selectedEpisode ? (
+          <div className="addPodcast">
+            {/* Title */}
+            <h2
+              style={{
+                fontSize: "24px",
+                color: "#111827",
+                fontWeight: 600,
+                marginBottom: "2rem",
+              }}
+            >
+              Add Podcast
+            </h2>
 
-        {/* Option Cards */}
-        <div
-          style={{
-            display: "flex",
-            gap: "1rem",
-            flexWrap: "wrap",
-            marginBottom: "2rem",
-          }}
-          id="upload-options"
-        >
-          {[
-            {
-              icon: <SiRss size={40} color="#ffffff" />,
-              title: "RSS Feed",
-              bgColor: "#F97316", // orange
-            },
-            {
-              icon: <FaYoutube size={40} color="#ffffff" />,
-              title: "Youtube Video",
-              bgColor: "#EF4444", // red
-            },
-            {
-              icon: <FaUpload size={40} color="#ffffff" />,
-              title: "Upload Files",
-              bgColor: "#8B5CF6", // violet
-            },
-          ].map(({ icon, title, bgColor }) => (
+            {/* Option Cards */}
             <div
-              key={title}
-              onClick={handleOpenModal}
               style={{
-                flex: 1,
-                minWidth: "200px",
                 display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                background: "#ffffff",
-                borderRadius: "10px",
-                padding: "1rem",
-                boxShadow: "0 5px 6px rgba(0, 0, 0, 0.06)",
-                border: "1px solid #f3f4f6",
-                cursor: "pointer",
+                gap: "1rem",
+                flexWrap: "wrap",
+                marginBottom: "2rem",
               }}
+              id="upload-options"
             >
-              {/* Left */}
-              <div>
-                <h4
+              {[
+                {
+                  icon: <SiRss size={40} color="#ffffff" />,
+                  title: "RSS Feed",
+                  bgColor: "#F97316", // orange
+                },
+                {
+                  icon: <FaYoutube size={40} color="#ffffff" />,
+                  title: "Youtube Video",
+                  bgColor: "#EF4444", // red
+                },
+                {
+                  icon: <FaUpload size={40} color="#ffffff" />,
+                  title: "Upload Files",
+                  bgColor: "#8B5CF6", // violet
+                },
+              ].map(({ icon, title, bgColor }) => (
+                <div
+                  key={title}
+                  onClick={handleOpenModal}
                   style={{
-                    margin: 0,
-                    fontSize: "20px",
-                    color: "#111827",
-                    marginBottom: "0.2rem",
+                    flex: 1,
+                    minWidth: "200px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    background: "#ffffff",
+                    borderRadius: "10px",
+                    padding: "1rem",
+                    boxShadow: "0 5px 6px rgba(0, 0, 0, 0.06)",
+                    border: "1px solid #f3f4f6",
+                    cursor: "pointer",
                   }}
                 >
-                  {title}
-                </h4>
-                <p style={{ margin: 0, fontSize: "15px", color: "#6b7280" }}>
-                  Lorem ipsum dolor sit. Dolor lorem sit.
-                </p>
-              </div>
-
-              {/* Right */}
-              <div
-                style={{
-                  backgroundColor: bgColor,
-                  borderRadius: "8px",
-                  padding: "0.5rem",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  width: "80px",
-                  height: "80px",
-                }}
-              >
-                {icon}
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Upload Box */}
-        {/* Conditional Render: Table or Upload Box */}
-        {loading ? (
-          <p>Loading...</p>
-        ) : episodes.length > 0 ? (
-          <div
-            style={{
-              overflowX: "auto",
-              background: "#fff",
-              borderRadius: "12px",
-              padding: "1rem",
-              boxShadow: "0 4px 10px rgba(0,0,0,0.05)",
-              border: "1px solid #e5e7eb",
-            }}
-          >
-            <table
-              style={{
-                width: "100%",
-                borderCollapse: "separate",
-                borderSpacing: "0 12px",
-              }}
-            >
-              <thead>
-                <tr
-                  style={{
-                    backgroundColor: "#f3f4f6",
-                    color: "#6b7280",
-                    fontSize: "14px",
-                  }}
-                >
-                  <th style={{ padding: "0.75rem", textAlign: "left" }}>No.</th>
-                  <th style={{ padding: "0.75rem", textAlign: "left" }}>
-                    Name
-                  </th>
-                  <th style={{ padding: "0.75rem", textAlign: "left" }}>
-                    Upload Date & Time
-                  </th>
-                  <th style={{ padding: "0.75rem", textAlign: "left" }}>
-                    Action
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {episodes.map((ep, index) => {
-                  const date = new Date(ep.createdAt);
-                  const formattedDate = date.toLocaleDateString("en-GB", {
-                    day: "2-digit",
-                    month: "short",
-                    year: "2-digit",
-                  });
-                  const formattedTime = date.toLocaleTimeString("en-GB", {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    hour12: false,
-                  });
-
-                  return (
-                    <tr
-                      key={ep._id}
+                  {/* Left */}
+                  <div>
+                    <h4
                       style={{
-                        background: "#ffffff",
-                        boxShadow: "0 1px 4px rgba(0, 0, 0, 0.04)",
-                        borderRadius: "8px",
+                        margin: 0,
+                        fontSize: "20px",
+                        color: "#111827",
+                        marginBottom: "0.2rem",
                       }}
                     >
-                      <td
-                        style={{
-                          padding: "0.75rem",
-                          borderTopLeftRadius: "8px",
-                          borderBottomLeftRadius: "8px",
-                          fontWeight: 600,
-                          color: "#71767A",
-                        }}
-                      >
-                        {index + 1}
-                      </td>
-                      <td
-                        style={{
-                          padding: "0.75rem",
-                          textTransform: "uppercase",
-                          fontWeight: 600,
-                          color: "#71767A",
-                        }}
-                      >
-                        {ep.name}
-                      </td>
-                      <td
-                        style={{
-                          padding: "0.75rem",
-                          whiteSpace: "nowrap",
-                          fontSize: "14px",
-                          fontWeight: 600,
-                          color: "#71767A",
-                        }}
-                      >
-                        {formattedDate} | {formattedTime}
-                      </td>
-                      <td
-                        style={{
-                          padding: "0.75rem",
-                          borderTopRightRadius: "8px",
-                          borderBottomRightRadius: "8px",
-                        }}
-                      >
-                        <div
+                      {title}
+                    </h4>
+                    <p
+                      style={{ margin: 0, fontSize: "15px", color: "#6b7280" }}
+                    >
+                      Lorem ipsum dolor sit. Dolor lorem sit.
+                    </p>
+                  </div>
+
+                  {/* Right */}
+                  <div
+                    style={{
+                      backgroundColor: bgColor,
+                      borderRadius: "8px",
+                      padding: "0.5rem",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      width: "80px",
+                      height: "80px",
+                    }}
+                  >
+                    {icon}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Upload Box */}
+            {/* Conditional Render: Table or Upload Box */}
+            {loading ? (
+              <p>Loading...</p>
+            ) : episodes.length > 0 ? (
+              <div
+                style={{
+                  overflowX: "auto",
+                  background: "#fff",
+                  borderRadius: "12px",
+                  padding: "1rem",
+                  boxShadow: "0 4px 10px rgba(0,0,0,0.05)",
+                  border: "1px solid #e5e7eb",
+                }}
+              >
+                <table
+                  style={{
+                    width: "100%",
+                    borderCollapse: "separate",
+                    borderSpacing: "0 12px",
+                  }}
+                >
+                  <thead>
+                    <tr
+                      style={{
+                        backgroundColor: "#f3f4f6",
+                        color: "#6b7280",
+                        fontSize: "14px",
+                      }}
+                    >
+                      <th style={{ padding: "0.75rem", textAlign: "left" }}>
+                        No.
+                      </th>
+                      <th style={{ padding: "0.75rem", textAlign: "left" }}>
+                        Name
+                      </th>
+                      <th style={{ padding: "0.75rem", textAlign: "left" }}>
+                        Upload Date & Time
+                      </th>
+                      <th style={{ padding: "0.75rem", textAlign: "left" }}>
+                        Action
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {episodes.map((ep, index) => {
+                      const date = new Date(ep.createdAt);
+                      const formattedDate = date.toLocaleDateString("en-GB", {
+                        day: "2-digit",
+                        month: "short",
+                        year: "2-digit",
+                      });
+                      const formattedTime = date.toLocaleTimeString("en-GB", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        hour12: false,
+                      });
+
+                      return (
+                        <tr
+                          key={ep._id}
                           style={{
-                            display: "inline-flex",
-                            border: "1px solid #d1d5db",
-                            borderRadius: "6px",
-                            overflow: "hidden",
+                            background: "#ffffff",
+                            boxShadow: "0 1px 4px rgba(0, 0, 0, 0.04)",
+                            borderRadius: "8px",
                           }}
                         >
-                          <button
+                          <td
                             style={{
-                              padding: "5px 12px",
-                              border: "none",
-                              backgroundColor: "white",
-                              color: "#111827",
-                              fontSize: "13px",
-                              borderRight: "1px solid #d1d5db",
-                              cursor: "pointer",
+                              padding: "0.75rem",
+                              borderTopLeftRadius: "8px",
+                              borderBottomLeftRadius: "8px",
+                              fontWeight: 600,
+                              color: "#71767A",
                             }}
-                            onClick={() =>
-                              alert(`Viewing episode: ${ep.title}`)
-                            }
                           >
-                            View
-                          </button>
-                          <button
+                            {index + 1}
+                          </td>
+                          <td
                             style={{
-                              padding: "4px 12px",
-                              border: "none",
-                              backgroundColor: "white",
-                              color: "#ef4444",
-                              fontSize: "13px",
-                              cursor: "pointer",
+                              padding: "0.75rem",
+                              textTransform: "uppercase",
+                              fontWeight: 600,
+                              color: "#71767A",
                             }}
-                            onClick={() => handleDelete(ep._id)}
                           >
-                            Delete
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+                            {ep.name}
+                          </td>
+                          <td
+                            style={{
+                              padding: "0.75rem",
+                              whiteSpace: "nowrap",
+                              fontSize: "14px",
+                              fontWeight: 600,
+                              color: "#71767A",
+                            }}
+                          >
+                            {formattedDate} | {formattedTime}
+                          </td>
+                          <td
+                            style={{
+                              padding: "0.75rem",
+                              borderTopRightRadius: "8px",
+                              borderBottomRightRadius: "8px",
+                            }}
+                          >
+                            <div
+                              style={{
+                                display: "inline-flex",
+                                border: "1px solid #d1d5db",
+                                borderRadius: "6px",
+                                overflow: "hidden",
+                              }}
+                            >
+                              <button
+                                style={{
+                                  padding: "5px 12px",
+                                  border: "none",
+                                  backgroundColor: "white",
+                                  color: "#111827",
+                                  fontSize: "13px",
+                                  borderRight: "1px solid #d1d5db",
+                                  cursor: "pointer",
+                                }}
+                                onClick={() => setSelectedEpisode(ep)}
+                              >
+                                View
+                              </button>
+                              <button
+                                style={{
+                                  padding: "4px 12px",
+                                  border: "none",
+                                  backgroundColor: "white",
+                                  color: "#ef4444",
+                                  fontSize: "13px",
+                                  cursor: "pointer",
+                                }}
+                                onClick={() => handleDelete(ep._id)}
+                              >
+                                Delete
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <div
+                style={{
+                  background: "#ffffff",
+                  borderRadius: "12px",
+                  border: "2px dashed #e5e7eb",
+                  padding: "2.5rem",
+                  textAlign: "center",
+                  boxShadow: "0 4px 12px rgba(0, 0, 0, 0.03)",
+                }}
+              >
+                <FiUploadCloud size={40} color="#9333EA" />
+                <p
+                  style={{
+                    fontSize: "15px",
+                    marginTop: "1rem",
+                    color: "#374151",
+                  }}
+                >
+                  Select a file or drag and drop here (Podcast Media or
+                  Transcription Text)
+                </p>
+                <p
+                  style={{
+                    fontSize: "13px",
+                    color: "#9ca3af",
+                    marginBottom: "1.5rem",
+                  }}
+                >
+                  MP4, MOV, MP3, WAV, PDF, DOCX or TXT file
+                </p>
+                <button
+                  style={{
+                    backgroundColor: "#9333ea",
+                    color: "#fff",
+                    padding: "0.6rem 1.25rem",
+                    border: "none",
+                    borderRadius: "6px",
+                    fontSize: "14px",
+                    fontWeight: 500,
+                    cursor: "pointer",
+                  }}
+                  onMouseOver={(e) =>
+                    (e.target.style.backgroundColor = "#7e22ce")
+                  }
+                  onMouseOut={(e) =>
+                    (e.target.style.backgroundColor = "#9333ea")
+                  }
+                >
+                  Select File
+                </button>
+              </div>
+            )}
           </div>
         ) : (
-          <div
-            style={{
-              background: "#ffffff",
-              borderRadius: "12px",
-              border: "2px dashed #e5e7eb",
-              padding: "2.5rem",
-              textAlign: "center",
-              boxShadow: "0 4px 12px rgba(0, 0, 0, 0.03)",
-            }}
-          >
-            <FiUploadCloud size={40} color="#9333EA" />
-            <p
-              style={{
-                fontSize: "15px",
-                marginTop: "1rem",
-                color: "#374151",
-              }}
-            >
-              Select a file or drag and drop here (Podcast Media or
-              Transcription Text)
-            </p>
-            <p
-              style={{
-                fontSize: "13px",
-                color: "#9ca3af",
-                marginBottom: "1.5rem",
-              }}
-            >
-              MP4, MOV, MP3, WAV, PDF, DOCX or TXT file
-            </p>
-            <button
-              style={{
-                backgroundColor: "#9333ea",
-                color: "#fff",
-                padding: "0.6rem 1.25rem",
-                border: "none",
-                borderRadius: "6px",
-                fontSize: "14px",
-                fontWeight: 500,
-                cursor: "pointer",
-              }}
-              onMouseOver={(e) => (e.target.style.backgroundColor = "#7e22ce")}
-              onMouseOut={(e) => (e.target.style.backgroundColor = "#9333ea")}
-            >
-              Select File
-            </button>
-          </div>
+          <EditTranscript
+            selectedEpisode={selectedEpisode}
+            setSelectedEpisode={setSelectedEpisode}
+          />
         )}
       </div>
+
+      {/* Dialouge Box */}
       <CreateEpisodes
         isOpen={isModalOpen}
         onClose={handleCloseModal}
