@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-// import axios from "axios";
+import axios from "axios";
 import "../styles/ProjectPage.css";
 import logo from "../assets/logo_purple.png";
 import { FaRegBell, FaCirclePlus } from "react-icons/fa6";
@@ -15,16 +15,15 @@ const ProjectPage = () => {
   const userData = location.state?.userData;
   const fetchProjects = async () => {
     try {
-      const response = await fetch(
+      const response = await axios.get(
         "https://skai-lama-assignment-4swq.onrender.com/api/project",
         {
-          credentials: "include",
+          withCredentials: true,
+          headers: {
+            "Content-Type": "application/json",
+          },
         }
       );
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      const data = await response.json();
 
       const colors = [
         "#f87171", // red
@@ -36,7 +35,7 @@ const ProjectPage = () => {
         "#f472b6", // pink
       ];
 
-      const formattedProjects = data.projects.map((project) => ({
+      const formattedProjects = response.data.projects.map((project) => ({
         id: project._id,
         title: project.title,
         files: project.epCount || 0,

@@ -13,6 +13,7 @@ app.use(
     origin: [
       "http://localhost:5173",
       "https://skai-lama-assignment-ivory.vercel.app",
+      "https://skai-lama-assignment-a5pi.vercel.app/",
     ],
     credentials: true,
 
