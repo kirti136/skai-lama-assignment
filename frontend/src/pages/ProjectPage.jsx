@@ -6,6 +6,7 @@ import { FaRegBell, FaCirclePlus } from "react-icons/fa6";
 import { MdOutlineSettings } from "react-icons/md";
 import bg from "../assets/projectDashboard.png";
 import CreateProjectDialog from "../components/CreateProjectDialog";
+import { Link } from "react-router-dom";
 
 const ProjectPage = () => {
   const [projects, setProjects] = useState([]);
@@ -194,45 +195,53 @@ const ProjectPage = () => {
         ) : (
           <div className="grid-responsive">
             {projects.map((project) => (
-              <div
+              <Link
+                to="/upload"
+                state={{ project }}
                 key={project.id}
-                style={{
-                  border: "1px solid #e5e7eb",
-                  borderRadius: "0.375rem",
-                  padding: "1rem",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "1rem",
-                }}
+                style={{ textDecoration: "none" }}
               >
                 <div
                   style={{
-                    width: "4rem",
-                    height: "4rem",
+                    border: "1px solid #e5e7eb",
+                    borderRadius: "0.375rem",
+                    padding: "1rem",
                     display: "flex",
                     alignItems: "center",
-                    justifyContent: "center",
-                    color: "#ffffff",
-                    fontWeight: "bold",
-                    fontSize: "1.25rem",
-                    borderRadius: "0.375rem",
-                    backgroundColor: project.color,
+                    gap: "1rem",
+                    cursor: "pointer",
+                    color: "inherit",
                   }}
                 >
-                  {project.initials}
+                  <div
+                    style={{
+                      width: "4rem",
+                      height: "4rem",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      color: "#ffffff",
+                      fontWeight: "bold",
+                      fontSize: "1.25rem",
+                      borderRadius: "0.375rem",
+                      backgroundColor: project.color,
+                    }}
+                  >
+                    {project.initials}
+                  </div>
+                  <div>
+                    <div style={{ color: "#7e22ce", fontWeight: "600" }}>
+                      {project.title}
+                    </div>
+                    <div style={{ fontSize: "0.875rem", color: "#6b7280" }}>
+                      {project.files} Files
+                    </div>
+                    <div style={{ fontSize: "0.75rem", color: "#9ca3af" }}>
+                      Last edited {project.lastEdited}
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <div style={{ color: "#7e22ce", fontWeight: "600" }}>
-                    {project.title}
-                  </div>
-                  <div style={{ fontSize: "0.875rem", color: "#6b7280" }}>
-                    {project.files} Files
-                  </div>
-                  <div style={{ fontSize: "0.75rem", color: "#9ca3af" }}>
-                    Last edited {project.lastEdited}
-                  </div>
-                </div>
-              </div>
+              </Link>
             ))}
           </div>
         )}

@@ -1,4 +1,6 @@
-import {  FaYoutube, FaUpload } from "react-icons/fa";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { FaYoutube, FaUpload } from "react-icons/fa";
 import { FiUploadCloud } from "react-icons/fi";
 import logo from "../assets/logo_purple.png";
 import { MdOutlineSettings } from "react-icons/md";
@@ -9,8 +11,51 @@ import { GoCopy } from "react-icons/go";
 import { RiVipDiamondLine } from "react-icons/ri";
 import { RiShare2Fill } from "react-icons/ri";
 import { SiRss } from "react-icons/si";
+import { useLocation } from "react-router-dom";
+
+
 
 const UploadPage = () => {
+  const location = useLocation();
+  const project = location.state?.project;
+  const [episodes, setEpisodes] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchEpisodes = async () => {
+      try {
+        const projectId = project?.id;
+        if (!projectId) return;
+
+        const res = await axios.get(
+          `http://localhost:3000/api/episode/p?projectId=${projectId}`,
+          {
+            withCredentials: true,
+          }
+        );
+        setEpisodes(res.data.episodes || []);
+      } catch (error) {
+        console.error("Error fetching episodes:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchEpisodes();
+  }, [project]);
+
+  const handleDelete = async (episodeId) => {
+    try {
+      await axios.delete(`http://localhost:3000/api/episode/${episodeId}`, {
+        withCredentials: true,
+      });
+      setEpisodes((prev) => prev.filter((ep) => ep._id !== episodeId));
+    } catch (error) {
+      console.error("Delete failed:", error);
+      alert("Failed to delete episode.");
+    }
+  };
+
   return (
     <div
       style={{
@@ -180,7 +225,7 @@ const UploadPage = () => {
               margin: 0,
             }}
           >
-            <IoHomeOutline /> Home Page / Sample Project /{" "}
+            <IoHomeOutline /> Home Page / {project?.title || "Sample Project"} /
             <span style={{ color: "#9333ea", fontWeight: 500 }}>
               Add your podcast
             </span>
@@ -256,7 +301,14 @@ const UploadPage = () => {
             >
               {/* Text on left */}
               <div>
-                <h4 style={{ margin: 0, fontSize: "20px", color: "#111827" ,marginBottom:"0.2rem"}}>
+                <h4
+                  style={{
+                    margin: 0,
+                    fontSize: "20px",
+                    color: "#111827",
+                    marginBottom: "0.2rem",
+                  }}
+                >
                   {title}
                 </h4>
                 <p style={{ margin: 0, fontSize: "15px", color: "#6b7280" }}>
@@ -284,53 +336,203 @@ const UploadPage = () => {
         </div>
 
         {/* Upload Box */}
-        <div
-          style={{
-            background: "#ffffff",
-            borderRadius: "12px",
-            border: "2px dashed #e5e7eb",
-            padding: "2.5rem",
-            textAlign: "center",
-            boxShadow: "0 4px 12px rgba(0, 0, 0, 0.03)",
-          }}
-        >
-          <FiUploadCloud size={40} color="#9333EA" />
-          <p
+        {/* Conditional Render: Table or Upload Box */}
+        {loading ? (
+          <p>Loading...</p>
+        ) : episodes.length > 0 ? (
+          <div
             style={{
-              fontSize: "15px",
-              marginTop: "1rem",
-              color: "#374151",
+              overflowX: "auto",
+              background: "#fff",
+              borderRadius: "12px",
+              padding: "1rem",
+              boxShadow: "0 4px 10px rgba(0,0,0,0.05)",
+              border: "1px solid #e5e7eb",
             }}
           >
-            Select a file or drag and drop here (Podcast Media or Transcription
-            Text)
-          </p>
-          <p
+            <table
+              style={{
+                width: "100%",
+                borderCollapse: "separate",
+                borderSpacing: "0 12px",
+              }}
+            >
+              <thead>
+                <tr
+                  style={{
+                    backgroundColor: "#f3f4f6",
+                    color: "#6b7280",
+                    fontSize: "14px",
+                  }}
+                >
+                  <th style={{ padding: "0.75rem", textAlign: "left" }}>No.</th>
+                  <th style={{ padding: "0.75rem", textAlign: "left" }}>
+                    Name
+                  </th>
+                  <th style={{ padding: "0.75rem", textAlign: "left" }}>
+                    Upload Date & Time
+                  </th>
+                  <th style={{ padding: "0.75rem", textAlign: "left" }}>
+                    Action
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {episodes.map((ep, index) => {
+                  const date = new Date(ep.createdAt);
+                  const formattedDate = date.toLocaleDateString("en-GB", {
+                    day: "2-digit",
+                    month: "short",
+                    year: "2-digit",
+                  });
+                  const formattedTime = date.toLocaleTimeString("en-GB", {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    hour12: false,
+                  });
+
+                  return (
+                    <tr
+                      key={ep._id}
+                      style={{
+                        background: "#ffffff",
+                        boxShadow: "0 1px 4px rgba(0, 0, 0, 0.04)",
+                        borderRadius: "8px",
+                      }}
+                    >
+                      <td
+                        style={{
+                          padding: "0.75rem",
+                          borderTopLeftRadius: "8px",
+                          borderBottomLeftRadius: "8px",
+                          fontWeight: 600,
+                          color: "#71767A",
+                        }}
+                      >
+                        {index + 1}
+                      </td>
+                      <td
+                        style={{
+                          padding: "0.75rem",
+                          textTransform: "uppercase",
+                          fontWeight: 600,
+                          color: "#71767A",
+                        }}
+                      >
+                        {ep.name}
+                      </td>
+                      <td
+                        style={{
+                          padding: "0.75rem",
+                          whiteSpace: "nowrap",
+                          fontSize: "14px",
+                          fontWeight: 600,
+                          color: "#71767A",
+                        }}
+                      >
+                        {formattedDate} | {formattedTime}
+                      </td>
+                      <td
+                        style={{
+                          padding: "0.75rem",
+                          borderTopRightRadius: "8px",
+                          borderBottomRightRadius: "8px",
+                        }}
+                      >
+                        <div
+                          style={{
+                            display: "inline-flex",
+                            border: "1px solid #d1d5db",
+                            borderRadius: "6px",
+                            overflow: "hidden",
+                          }}
+                        >
+                          <button
+                            style={{
+                              padding: "5px 12px",
+                              border: "none",
+                              backgroundColor: "white",
+                              color: "#111827",
+                              fontSize: "13px",
+                              borderRight: "1px solid #d1d5db",
+                              cursor: "pointer",
+                            }}
+                            onClick={() =>
+                              alert(`Viewing episode: ${ep.title}`)
+                            }
+                          >
+                            View
+                          </button>
+                          <button
+                            style={{
+                              padding: "4px 12px",
+                              border: "none",
+                              backgroundColor: "white",
+                              color: "#ef4444",
+                              fontSize: "13px",
+                              cursor: "pointer",
+                            }}
+                            onClick={() => handleDelete(ep._id)}
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <div
             style={{
-              fontSize: "13px",
-              color: "#9ca3af",
-              marginBottom: "1.5rem",
+              background: "#ffffff",
+              borderRadius: "12px",
+              border: "2px dashed #e5e7eb",
+              padding: "2.5rem",
+              textAlign: "center",
+              boxShadow: "0 4px 12px rgba(0, 0, 0, 0.03)",
             }}
           >
-            MP4, MOV, MP3, WAV, PDF, DOCX or TXT file
-          </p>
-          <button
-            style={{
-              backgroundColor: "#9333ea",
-              color: "#fff",
-              padding: "0.6rem 1.25rem",
-              border: "none",
-              borderRadius: "6px",
-              fontSize: "14px",
-              fontWeight: 500,
-              cursor: "pointer",
-            }}
-            onMouseOver={(e) => (e.target.style.backgroundColor = "#7e22ce")}
-            onMouseOut={(e) => (e.target.style.backgroundColor = "#9333ea")}
-          >
-            Select File
-          </button>
-        </div>
+            <FiUploadCloud size={40} color="#9333EA" />
+            <p
+              style={{
+                fontSize: "15px",
+                marginTop: "1rem",
+                color: "#374151",
+              }}
+            >
+              Select a file or drag and drop here (Podcast Media or
+              Transcription Text)
+            </p>
+            <p
+              style={{
+                fontSize: "13px",
+                color: "#9ca3af",
+                marginBottom: "1.5rem",
+              }}
+            >
+              MP4, MOV, MP3, WAV, PDF, DOCX or TXT file
+            </p>
+            <button
+              style={{
+                backgroundColor: "#9333ea",
+                color: "#fff",
+                padding: "0.6rem 1.25rem",
+                border: "none",
+                borderRadius: "6px",
+                fontSize: "14px",
+                fontWeight: 500,
+                cursor: "pointer",
+              }}
+              onMouseOver={(e) => (e.target.style.backgroundColor = "#7e22ce")}
+              onMouseOut={(e) => (e.target.style.backgroundColor = "#9333ea")}
+            >
+              Select File
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
