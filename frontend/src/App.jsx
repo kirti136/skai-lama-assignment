@@ -5,6 +5,7 @@ import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
 import "./App.css";
+import ProjectPage from "./pages/ProjectPAge";
 
 const PrivateRoute = ({ children }) => {
   const token = Cookies.get("token");
@@ -18,10 +19,10 @@ function App() {
       <Route path="/signup" element={<SignupPage />} />
 
       <Route
-        path="/home"
+        path="/project"
         element={
           <PrivateRoute>
-            <HomePage />
+            <ProjectPage />
           </PrivateRoute>
         }
       />

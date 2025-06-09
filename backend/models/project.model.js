@@ -12,6 +12,10 @@ const projectSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    epCount: {
+      type: Number,
+      default: 0,
+    },
   },
   {
     timestamps: true,

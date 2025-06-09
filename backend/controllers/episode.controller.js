@@ -1,9 +1,21 @@
-const Episode = require("../models/episode.model");
+const Episode = require("../models/episode.model.js");
+const Project = require("../models/project.model.js");
 
 exports.getEpisodesByProjectId = async (req, res) => {
   try {
     const { projectId } = req.query;
+    const userId = req.user.id;
 
+    // Step 1: Check if project exists and belongs to this user
+    const project = await Project.findOne({ _id: projectId, userId: userId });
+    if (!project) {
+      return res.status(404).json({
+        success: false,
+        message: "Project not found",
+      });
+    }
+
+    // Step 2: Fetch episodes belonging to this project
     const episodes = await Episode.find({ projectId });
 
     if (!episodes || episodes.length === 0) {
@@ -51,6 +63,11 @@ exports.createEpisode = async (req, res) => {
 
     const newEpisode = new Episode({ name, transcript, projectId });
     await newEpisode.save();
+
+    const episodes = await Episode.find({ projectId });
+    const episodeCount = episodes.length;
+
+    await Project.findByIdAndUpdate(projectId, { epCount: episodeCount });
 
     res.status(201).json({ success: true, episode: newEpisode });
   } catch (error) {
