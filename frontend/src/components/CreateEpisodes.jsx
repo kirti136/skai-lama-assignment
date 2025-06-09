@@ -20,7 +20,7 @@ const CreateEpisodes = ({ isOpen, onClose, onCreate, projectId }) => {
 
     try {
       const response = await axios.post(
-        `http://localhost:3000/api/episode`,
+        `https://skai-lama-assignment-4swq.onrender.com/api/episode`,
         {
           projectId,
           name: title,

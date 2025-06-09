@@ -72,12 +72,11 @@ exports.login = async (req, res) => {
     );
 
     // Set cookie
-    res.cookie("token", token, {
-      httpOnly: false,
-      maxAge: 3600000, // 1 hour
-      sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax", 
-      secure: process.env.NODE_ENV === "production", 
-      path: "/",
+    res.cookie("token", "Bearer " + token, {
+      httpOnly: true,
+      secure: true, // Make sure your backend is on HTTPS (which Render is)
+      sameSite: "None", // Required for cross-origin
+      maxAge: 3600000,
     });
 
     res.status(200).json({
