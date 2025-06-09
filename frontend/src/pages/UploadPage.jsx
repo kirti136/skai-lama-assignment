@@ -12,8 +12,7 @@ import { RiVipDiamondLine } from "react-icons/ri";
 import { RiShare2Fill } from "react-icons/ri";
 import { SiRss } from "react-icons/si";
 import { useLocation } from "react-router-dom";
-
-
+import CreateEpisodes from "../components/CreateEpisodes";
 
 const UploadPage = () => {
   const location = useLocation();
@@ -54,6 +53,20 @@ const UploadPage = () => {
       console.error("Delete failed:", error);
       alert("Failed to delete episode.");
     }
+  };
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleCreateEpisode = (newEpisode) => {
+    setEpisodes((prev) => [...prev, newEpisode]);
   };
 
   return (
@@ -285,6 +298,7 @@ const UploadPage = () => {
           ].map(({ icon, title, bgColor }) => (
             <div
               key={title}
+              onClick={handleOpenModal}
               style={{
                 flex: 1,
                 minWidth: "200px",
@@ -299,7 +313,7 @@ const UploadPage = () => {
                 cursor: "pointer",
               }}
             >
-              {/* Text on left */}
+              {/* Left */}
               <div>
                 <h4
                   style={{
@@ -316,7 +330,7 @@ const UploadPage = () => {
                 </p>
               </div>
 
-              {/* Icon on right with colored background */}
+              {/* Right */}
               <div
                 style={{
                   backgroundColor: bgColor,
@@ -534,6 +548,12 @@ const UploadPage = () => {
           </div>
         )}
       </div>
+      <CreateEpisodes
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        onCreate={handleCreateEpisode}
+        projectId={project?.id}
+      />
     </div>
   );
 };
