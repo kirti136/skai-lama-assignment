@@ -1,16 +1,10 @@
-import React from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
-import Cookies from "js-cookie";
-import HomePage from "./pages/HomePage";
+import "./App.css";
+import { Routes, Route } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
-import "./App.css";
 import ProjectPage from "./pages/ProjectPAge";
-
-const PrivateRoute = ({ children }) => {
-  const token = Cookies.get("token");
-  return token ? children : <Navigate to="/" replace />;
-};
+import UploadPage from "./pages/UploadPage";
+import PrivateRoute from "./components/PrivateRoute";
 
 function App() {
   return (
@@ -23,6 +17,15 @@ function App() {
         element={
           <PrivateRoute>
             <ProjectPage />
+          </PrivateRoute>
+        }
+      />
+
+      <Route
+        path="/upload"
+        element={
+          <PrivateRoute>
+            <UploadPage />
           </PrivateRoute>
         }
       />

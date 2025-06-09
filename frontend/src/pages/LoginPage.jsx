@@ -27,7 +27,7 @@ const LoginPage = () => {
       });
 
       console.log("ertyui", res.data);
-      Cookies.set("token", res.data.token, { expires: 1 });
+      Cookies.set("token", res.data.token, { expires: 7 });
       
       navigate("/project");
     } catch (err) {
