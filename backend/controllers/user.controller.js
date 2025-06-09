@@ -83,6 +83,7 @@ exports.login = async (req, res) => {
       success: true,
       message: "Logged in successfully",
       token: "Bearer " + token,
+      user,
     });
   } catch (error) {
     console.error("Login Error:", error);

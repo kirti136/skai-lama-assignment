@@ -14,10 +14,17 @@ import { SiRss } from "react-icons/si";
 import { useLocation } from "react-router-dom";
 import CreateEpisodes from "../components/CreateEpisodes";
 import EditTranscript from "../components/EditTranscript";
+import { Link } from "react-router-dom";
+import { CiLogout } from "react-icons/ci";
+import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
 
 const UploadPage = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+
   const project = location.state?.project;
+  const userData = location.state?.userData;
   const [episodes, setEpisodes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedEpisode, setSelectedEpisode] = useState(null);
@@ -69,6 +76,29 @@ const UploadPage = () => {
 
   const handleCreateEpisode = (newEpisode) => {
     setEpisodes((prev) => [...prev, newEpisode]);
+  };
+
+  const handleLogout = async (e) => {
+    e.preventDefault();
+    try {
+      const token = Cookies.get("token");
+
+      await axios.post(
+        "http://localhost:3000/api/user/logout",
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true, 
+        }
+      );
+
+      Cookies.remove("token");
+      navigate("/");
+    } catch (error) {
+      console.error("Logout failed", error);
+    }
   };
 
   return (
@@ -183,6 +213,25 @@ const UploadPage = () => {
             Help
           </a>
 
+          <a
+            href="#"
+            onClick={handleLogout}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "0.5rem",
+              color: "#6b7280",
+              fontSize: "14px",
+              textDecoration: "none",
+              padding: "0.8rem 0.5rem",
+              transition: "color 0.2s ease",
+              borderBottom: "1px solid #e5e7eb",
+            }}
+          >
+            <CiLogout />
+            Logout
+          </a>
+
           <div
             style={{
               display: "flex",
@@ -191,19 +240,42 @@ const UploadPage = () => {
               marginTop: "1rem",
             }}
           >
-            <img
-              src="https://via.placeholder.com/40"
-              alt="User"
-              style={{
-                width: "36px",
-                height: "36px",
-                borderRadius: "50%",
-              }}
-            />
+            {userData.profileImage ? (
+              <img
+                src={userData.profileImage}
+                alt="User"
+                style={{
+                  width: "36px",
+                  height: "36px",
+                  borderRadius: "50%",
+                  objectFit: "cover",
+                }}
+              />
+            ) : (
+              <div
+                style={{
+                  width: "36px",
+                  height: "36px",
+                  borderRadius: "50%",
+                  backgroundColor: "#9333ea",
+                  color: "white",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontWeight: "bold",
+                  fontSize: "18px",
+                  userSelect: "none",
+                }}
+              >
+                {userData.email ? userData.email.charAt(0).toUpperCase() : "U"}
+              </div>
+            )}
             <div>
-              <p style={{ margin: 0, fontWeight: 500 }}>Username</p>
+              <p style={{ margin: 0, fontWeight: 500 }}>
+                {userData.username || "Username"}
+              </p>
               <p style={{ margin: 0, fontSize: "12px", color: "#9ca3af" }}>
-                user@email.com
+                {userData.email || "user@email.com"}
               </p>
             </div>
           </div>
@@ -230,6 +302,7 @@ const UploadPage = () => {
           }}
         >
           {/* Breadcrumb */}
+
           <p
             style={{
               display: "flex",
@@ -238,9 +311,22 @@ const UploadPage = () => {
               alignItems: "center",
               gap: "0.5rem",
               margin: 0,
+              cursor: "pointer",
             }}
           >
-            <IoHomeOutline /> Home Page / {project?.title || "Sample Project"} /
+            <Link
+              to={`/project`}
+              style={{
+                textDecoration: "none",
+                color: "#6b7280",
+                display: "flex",
+                alignItems: "center",
+                gap: "0.5rem",
+              }}
+            >
+              <IoHomeOutline /> Home Page / {project?.title || "Sample Project"}{" "}
+              /
+            </Link>
             <span style={{ color: "#9333ea", fontWeight: 500 }}>
               Add your podcast
             </span>

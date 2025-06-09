@@ -6,12 +6,13 @@ import { FaRegBell, FaCirclePlus } from "react-icons/fa6";
 import { MdOutlineSettings } from "react-icons/md";
 import bg from "../assets/projectDashboard.png";
 import CreateProjectDialog from "../components/CreateProjectDialog";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const ProjectPage = () => {
   const [projects, setProjects] = useState([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-
+  const location = useLocation();
+  const userData = location.state?.userData;
   const fetchProjects = async () => {
     try {
       const response = await axios.get("http://localhost:3000/api/project", {
@@ -197,7 +198,7 @@ const ProjectPage = () => {
             {projects.map((project) => (
               <Link
                 to="/upload"
-                state={{ project }}
+                state={{ project, userData }}
                 key={project.id}
                 style={{ textDecoration: "none" }}
               >

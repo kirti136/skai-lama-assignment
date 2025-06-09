@@ -28,8 +28,8 @@ const LoginPage = () => {
 
       console.log("ertyui", res.data);
       Cookies.set("token", res.data.token, { expires: 7 });
-      
-      navigate("/project");
+
+      navigate("/project", { state: { userData: res.data.user } });
     } catch (err) {
       if (err.response && err.response.data && err.response.data.message) {
         setError(err.response.data.message);

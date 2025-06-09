@@ -19,9 +19,9 @@ exports.getEpisodesByProjectId = async (req, res) => {
     const episodes = await Episode.find({ projectId });
 
     if (!episodes || episodes.length === 0) {
-      return res.status(404).json({
-        success: false,
-        message: "No episodes found for this project",
+      return res.status(200).json({
+        success: true,
+        episodes: [],
       });
     }
 
