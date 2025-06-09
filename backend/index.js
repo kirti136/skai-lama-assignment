@@ -12,7 +12,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",
-      "https://skai-lama-assignment-ivory.vercel.app/",
+      "https://skai-lama-assignment-ivory.vercel.app",
     ],
     credentials: true,
 
