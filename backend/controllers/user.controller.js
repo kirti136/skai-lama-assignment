@@ -68,12 +68,11 @@ exports.login = async (req, res) => {
     const token = jwt.sign(
       { id: user._id, email: user.email },
       process.env.JWT_SECRET_KEY,
-      { expiresIn: "7d" }
+      { expiresIn: "1h" }
     );
 
     // Set cookie
-    res.cookie("token", token, {
-      // Remove "Bearer " prefix from cookie
+    res.cookie("token", "Bearer " + token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production", // Only secure in production
       sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
@@ -84,8 +83,7 @@ exports.login = async (req, res) => {
     res.status(200).json({
       success: true,
       message: "Logged in successfully",
-      token: token,
-      user,
+      token: "Bearer " + token,
     });
   } catch (error) {
     console.error("Login Error:", error);
