@@ -1,0 +1,56 @@
+/* LoginPage.css */
+
+.login-container {
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
+  font-family: Roboto, sans-serif;
+}
+
+.left-panel {
+  flex: 2.4;
+  background-size: cover;
+  background-position: center;
+  color: white;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  position: relative;
+}
+
+.right-panel {
+  flex: 1;
+  background-color: #f4f4f4;
+  padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .login-container {
+    flex-direction: column;
+  }
+
+  .left-panel,
+  .right-panel {
+    flex: none;
+    width: 100%;
+    padding: 40px 20px;
+  }
+
+  .left-panel h1 {
+    font-size: 2.2rem !important;
+  }
+
+  .left-panel p {
+    font-size: 1.1rem !important;
+  }
+
+  .right-panel h2 {
+    font-size: 32px !important;
+  }
+}
