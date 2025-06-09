@@ -36,7 +36,7 @@ const UploadPage = () => {
         if (!projectId) return;
 
         const res = await axios.get(
-          `https://skai-lama-assignment-4swq.onrender.com/api/episode/p?projectId=${projectId}`,
+          `http://localhost:3000/api/episode/p?projectId=${projectId}`,
           {
             withCredentials: true,
           }
@@ -54,7 +54,7 @@ const UploadPage = () => {
 
   const handleDelete = async (episodeId) => {
     try {
-      await axios.delete(`https://skai-lama-assignment-4swq.onrender.com/api/episode/${episodeId}`, {
+      await axios.delete(`http://localhost:3000/api/episode/${episodeId}`, {
         withCredentials: true,
       });
       setEpisodes((prev) => prev.filter((ep) => ep._id !== episodeId));
@@ -78,19 +78,21 @@ const UploadPage = () => {
     setEpisodes((prev) => [...prev, newEpisode]);
   };
 
+  console.log("HHHHHHHHHH", userData);
+
   const handleLogout = async (e) => {
     e.preventDefault();
     try {
       const token = Cookies.get("token");
 
       await axios.post(
-        "https://skai-lama-assignment-4swq.onrender.com/api/user/logout",
+        "http://localhost:3000/api/user/logout",
         {},
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-          withCredentials: true, 
+          withCredentials: true,
         }
       );
 
@@ -240,7 +242,7 @@ const UploadPage = () => {
               marginTop: "1rem",
             }}
           >
-            {userData.profileImage ? (
+            {/* {userData?.imageUrl ? (
               <img
                 src={userData.profileImage}
                 alt="User"
@@ -251,25 +253,25 @@ const UploadPage = () => {
                   objectFit: "cover",
                 }}
               />
-            ) : (
-              <div
-                style={{
-                  width: "36px",
-                  height: "36px",
-                  borderRadius: "50%",
-                  backgroundColor: "#9333ea",
-                  color: "white",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontWeight: "bold",
-                  fontSize: "18px",
-                  userSelect: "none",
-                }}
-              >
-                {userData.email ? userData.email.charAt(0).toUpperCase() : "U"}
-              </div>
-            )}
+            ) : ( */}
+            <div
+              style={{
+                width: "36px",
+                height: "36px",
+                borderRadius: "50%",
+                backgroundColor: "#9333ea",
+                color: "white",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontWeight: "bold",
+                fontSize: "18px",
+                userSelect: "none",
+              }}
+            >
+              {userData.email ? userData.email.charAt(0).toUpperCase() : "U"}
+            </div>
+            {/* )} */}
             <div>
               <p style={{ margin: 0, fontWeight: 500 }}>
                 {userData.username || "Username"}

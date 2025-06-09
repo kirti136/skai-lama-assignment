@@ -19,7 +19,7 @@ const CreateProjectDialog = ({ isOpen, onClose, onCreate }) => {
 
     try {
       const response = await axios.post(
-        "https://skai-lama-assignment-4swq.onrender.com/api/project",
+        "http://localhost:3000/api/project",
         { title },
         { withCredentials: true }
       );
