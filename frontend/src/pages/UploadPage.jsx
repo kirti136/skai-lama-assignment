@@ -36,7 +36,7 @@ const UploadPage = () => {
         if (!projectId) return;
 
         const res = await axios.get(
-          `http://localhost:3000/api/episode/p?projectId=${projectId}`,
+          `https://skai-lama-assignment-4swq.onrender.com/api/episode/p?projectId=${projectId}`,
           {
             withCredentials: true,
           }
@@ -54,7 +54,7 @@ const UploadPage = () => {
 
   const handleDelete = async (episodeId) => {
     try {
-      await axios.delete(`http://localhost:3000/api/episode/${episodeId}`, {
+      await axios.delete(`https://skai-lama-assignment-4swq.onrender.com/api/episode/${episodeId}`, {
         withCredentials: true,
       });
       setEpisodes((prev) => prev.filter((ep) => ep._id !== episodeId));
@@ -84,7 +84,7 @@ const UploadPage = () => {
       const token = Cookies.get("token");
 
       await axios.post(
-        "http://localhost:3000/api/user/logout",
+        "https://skai-lama-assignment-4swq.onrender.com/api/user/logout",
         {},
         {
           headers: {

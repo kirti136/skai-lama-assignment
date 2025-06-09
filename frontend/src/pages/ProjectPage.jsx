@@ -15,9 +15,12 @@ const ProjectPage = () => {
   const userData = location.state?.userData;
   const fetchProjects = async () => {
     try {
-      const response = await axios.get("http://localhost:3000/api/project", {
-        withCredentials: true,
-      });
+      const response = await axios.get(
+        "https://skai-lama-assignment-4swq.onrender.com/api/project",
+        {
+          withCredentials: true,
+        }
+      );
 
       const colors = [
         "#f87171", // red

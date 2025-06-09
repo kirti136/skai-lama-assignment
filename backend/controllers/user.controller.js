@@ -72,11 +72,12 @@ exports.login = async (req, res) => {
     );
 
     // Set cookie
-    res.cookie("token", "Bearer " + token, {
+    res.cookie("token", token, {
       httpOnly: true,
-      maxAge: 3600000,
-      sameSite: "strict",
-      secure: process.env.NODE_ENV === "production",
+      maxAge: 3600000, // 1 hour
+      sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax", 
+      secure: process.env.NODE_ENV === "production", 
+      path: "/",
     });
 
     res.status(200).json({

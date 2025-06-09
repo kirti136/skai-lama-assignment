@@ -14,8 +14,7 @@ const PrivateRoute = ({ children }) => {
     const currentTime = Math.floor(Date.now() / 1000);
 
     if (decoded.exp && decoded.exp < currentTime) {
-      // Token expired
-      Cookies.remove("token"); // Optional: clear token
+      Cookies.remove("token"); 
       return <Navigate to="/" replace />;
     }
 
