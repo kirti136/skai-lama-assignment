@@ -10,12 +10,12 @@ const verifyToken = (req, res, next) => {
     });
   }
 
-  if (!authHeader.startsWith("Bearer ")) {
-    return res.status(403).json({
-      success: false,
-      message: "Invalid token format. Format should be 'Bearer <token>'.",
-    });
-  }
+  // if (!authHeader.startsWith("Bearer ")) {
+  //   return res.status(403).json({
+  //     success: false,
+  //     message: "Invalid token format. Format should be 'Bearer <token>'.",
+  //   });
+  // }
 
   const token = authHeader.split(" ")[1];
 
