@@ -11,7 +11,6 @@ import "../styles/LoginPage.css";
 const LoginPage = () => {
   const navigate = useNavigate();
 
-  // State for form inputs
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
