@@ -28,6 +28,7 @@ const UploadPage = () => {
   const [loading, setLoading] = useState(true);
   const [selectedEpisode, setSelectedEpisode] = useState(null);
   const [userData, setUserData] = useState({});
+  const [selectedOption, setSelectedOption] = useState(null);
 
   useEffect(() => {
     const fetchEpisodes = async () => {
@@ -88,7 +89,8 @@ const UploadPage = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleOpenModal = () => {
+  const handleOpenModal = (option) => {
+    setSelectedOption(option);
     setIsModalOpen(true);
   };
 
@@ -404,7 +406,7 @@ const UploadPage = () => {
               ].map(({ icon, title, bgColor }) => (
                 <div
                   key={title}
-                  onClick={handleOpenModal}
+                  onClick={() => handleOpenModal(title)}
                   style={{
                     flex: 1,
                     minWidth: "200px",
@@ -674,6 +676,7 @@ const UploadPage = () => {
         onClose={handleCloseModal}
         onCreate={handleCreateEpisode}
         projectId={project?.id}
+        selectedOption={selectedOption}
       />
     </div>
   );
