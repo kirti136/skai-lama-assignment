@@ -109,9 +109,16 @@ exports.deleteEpisode = async (req, res) => {
         .json({ success: false, message: "Episode not found" });
     }
 
-    res
-      .status(200)
-      .json({ success: true, message: "Episode deleted successfully" });
+    const projectId = deletedEpisode.projectId;
+    const episodeCount = await Episode.countDocuments({ projectId });
+
+    await Project.findByIdAndUpdate(projectId, { epCount: episodeCount });
+
+    res.status(200).json({
+      success: true,
+      message: "Episode deleted successfully",
+      updatedEpCount: episodeCount,
+    });
   } catch (error) {
     console.error("Error deleting episode:", error);
     res.status(500).json({ success: false, message: error.message });
