@@ -12,10 +12,10 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",
+      "https://skai-lama-assignment-six.vercel.app",
       "https://skai-lama-assignment-a5pi.vercel.app",
       "https://skai-lama-assignment-xi.vercel.app",
       "https://skai-lama-assignment-aashishkumar321s-projects.vercel.app",
-      "https://skai-lama-assignment-six.vercel.app/",
     ],
     methods: ["POST", "GET", "DELETE", "PUT", "PATCH", "OPTIONS"],
     credentials: true,
