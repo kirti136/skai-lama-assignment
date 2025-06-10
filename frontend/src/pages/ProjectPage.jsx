@@ -6,17 +6,15 @@ import { FaRegBell, FaCirclePlus } from "react-icons/fa6";
 import { MdOutlineSettings } from "react-icons/md";
 import bg from "../assets/projectDashboard.png";
 import CreateProjectDialog from "../components/CreateProjectDialog";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const ProjectPage = () => {
   const [projects, setProjects] = useState([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const location = useLocation();
-  const userData = location.state?.userData;
   const fetchProjects = async () => {
     try {
       const response = await axios.get(
-        "https://skai-lama-assignment-4swq.onrender.com/api/project",
+        `${import.meta.env.VITE_API_BASE_URL}/api/project`,
         {
           withCredentials: true,
           headers: {
@@ -204,7 +202,7 @@ const ProjectPage = () => {
             {projects.map((project) => (
               <Link
                 to="/upload"
-                state={{ project, userData }}
+                state={{ project }}
                 key={project.id}
                 style={{ textDecoration: "none" }}
               >

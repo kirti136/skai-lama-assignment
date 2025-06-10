@@ -18,7 +18,7 @@ const EditTranscript = ({ selectedEpisode, setSelectedEpisode }) => {
     setIsSaving(true);
     try {
       await axios.put(
-        `https://skai-lama-assignment-4swq.onrender.com/api/episode/${
+        `${import.meta.env.VITE_API_BASE_URL}/api/episode/${
           selectedEpisode._id || selectedEpisode.id
         }`,
         { transcript: editedTranscript },

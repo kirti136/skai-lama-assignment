@@ -20,11 +20,14 @@ const SignupPage = () => {
     setError("");
 
     try {
-      const res = await axios.post("https://skai-lama-assignment-4swq.onrender.com/api/user/register", {
-        username,
-        email,
-        password,
-      });
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_BASE_URL}/api/user/register`,
+        {
+          username,
+          email,
+          password,
+        }
+      );
 
       if (res.status === 201 || res.status === 200) {
         navigate("/");
@@ -212,7 +215,7 @@ const SignupPage = () => {
               fontWeight: "bold",
               cursor: "pointer",
               marginBottom: "16px",
-              marginTop:"10px"
+              marginTop: "10px",
             }}
           >
             Sign Up

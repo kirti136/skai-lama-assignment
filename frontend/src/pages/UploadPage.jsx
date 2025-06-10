@@ -16,7 +16,7 @@ import CreateEpisodes from "../components/CreateEpisodes";
 import EditTranscript from "../components/EditTranscript";
 import { Link } from "react-router-dom";
 import { CiLogout } from "react-icons/ci";
-import Cookies from "js-cookie";
+
 import { useNavigate } from "react-router-dom";
 
 const UploadPage = () => {
@@ -24,10 +24,10 @@ const UploadPage = () => {
   const navigate = useNavigate();
 
   const project = location.state?.project;
-  const userData = location.state?.userData;
   const [episodes, setEpisodes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedEpisode, setSelectedEpisode] = useState(null);
+  const [userData, setUserData] = useState({});
 
   useEffect(() => {
     const fetchEpisodes = async () => {
@@ -36,7 +36,9 @@ const UploadPage = () => {
         if (!projectId) return;
 
         const res = await axios.get(
-          `https://skai-lama-assignment-4swq.onrender.com/api/episode/p?projectId=${projectId}`,
+          `${
+            import.meta.env.VITE_API_BASE_URL
+          }/api/episode/p?projectId=${projectId}`,
           {
             withCredentials: true,
           }
@@ -52,10 +54,27 @@ const UploadPage = () => {
     fetchEpisodes();
   }, [project]);
 
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const res = await axios.get(
+          `${import.meta.env.VITE_API_BASE_URL}/api/user/me`,
+          {
+            withCredentials: true,
+          }
+        );
+        setUserData(res.data.user || []);
+      } catch (error) {
+        console.error("Error fetching userData:", error);
+      }
+    };
+    fetchUserData();
+  }, []);
+
   const handleDelete = async (episodeId) => {
     try {
       await axios.delete(
-        `https://skai-lama-assignment-4swq.onrender.com/api/episode/${episodeId}`,
+        `${import.meta.env.VITE_API_BASE_URL}/api/episode/${episodeId}`,
         {
           withCredentials: true,
         }
@@ -84,20 +103,13 @@ const UploadPage = () => {
   const handleLogout = async (e) => {
     e.preventDefault();
     try {
-      const token = Cookies.get("token");
-
       await axios.post(
-        "https://skai-lama-assignment-4swq.onrender.com/api/user/logout",
+        `${import.meta.env.VITE_API_BASE_URL}/api/user/logout`,
         {},
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
           withCredentials: true,
         }
       );
-
-      Cookies.remove("token");
       navigate("/");
     } catch (error) {
       console.error("Logout failed", error);
@@ -243,9 +255,9 @@ const UploadPage = () => {
               marginTop: "1rem",
             }}
           >
-            {/* {userData?.imageUrl ? (
+            {userData?.imageUrl ? (
               <img
-                src={userData.profileImage}
+                src={userData.imageUrl}
                 alt="User"
                 style={{
                   width: "36px",
@@ -254,25 +266,25 @@ const UploadPage = () => {
                   objectFit: "cover",
                 }}
               />
-            ) : ( */}
-            <div
-              style={{
-                width: "36px",
-                height: "36px",
-                borderRadius: "50%",
-                backgroundColor: "#9333ea",
-                color: "white",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontWeight: "bold",
-                fontSize: "18px",
-                userSelect: "none",
-              }}
-            >
-              {userData.email ? userData.email.charAt(0).toUpperCase() : "U"}
-            </div>
-            {/* )} */}
+            ) : (
+              <div
+                style={{
+                  width: "36px",
+                  height: "36px",
+                  borderRadius: "50%",
+                  backgroundColor: "#9333ea",
+                  color: "white",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontWeight: "bold",
+                  fontSize: "18px",
+                  userSelect: "none",
+                }}
+              >
+                {userData.email ? userData.email.charAt(0).toUpperCase() : "U"}
+              </div>
+            )}
             <div>
               <p style={{ margin: 0, fontWeight: 500 }}>
                 {userData.username || "Username"}

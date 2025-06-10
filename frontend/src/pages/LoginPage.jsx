@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import Cookies from "js-cookie";
+
 import logo_purple from "../assets/logo_purple.png";
 import logo_white from "../assets/logo_white no bg.png";
 import bg from "../assets/bg.png";
@@ -21,15 +21,21 @@ const LoginPage = () => {
     setError("");
 
     try {
-      const res = await axios.post("https://skai-lama-assignment-4swq.onrender.com/api/user/login", {
-        email,
-        password,
-      });
+      await axios.post(
+        `${import.meta.env.VITE_API_BASE_URL}/api/user/login`,
+        {
+          email,
+          password,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      );
 
-      console.log("ertyui", res.data);
-      Cookies.set("token", res.data.token, { expires: 7 });
-
-      navigate("/project", { state: { userData: res.data.user } });
+      navigate("/project");
     } catch (err) {
       if (err.response && err.response.data && err.response.data.message) {
         setError(err.response.data.message);

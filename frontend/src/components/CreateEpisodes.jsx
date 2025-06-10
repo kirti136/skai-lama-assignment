@@ -20,7 +20,7 @@ const CreateEpisodes = ({ isOpen, onClose, onCreate, projectId }) => {
 
     try {
       const response = await axios.post(
-        `https://skai-lama-assignment-4swq.onrender.com/api/episode`,
+        `${import.meta.env.VITE_API_BASE_URL}/api/episode`,
         {
           projectId,
           name: title,
