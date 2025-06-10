@@ -19,6 +19,9 @@ router.post(
 // Login route
 router.post("/login", loginValidationRules(), validate, userController.login);
 
+// Me route
+router.get("/me", verifyToken, userController.me);
+
 // Logout route
 router.post("/logout", verifyToken, userController.logout);
 

@@ -75,9 +75,8 @@ exports.login = async (req, res) => {
     res.cookie("token", "Bearer " + token, {
       httpOnly: true,
       secure: true,
-      sameSite: 'none',
+      sameSite: "none",
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
-    
     });
 
     res.status(200).json({
@@ -87,6 +86,22 @@ exports.login = async (req, res) => {
     });
   } catch (error) {
     console.error("Login Error:", error);
+    res.status(500).json({ success: false, message: "Internal Server Error" });
+  }
+};
+
+exports.me = async (req, res) => {
+  try {
+    // req.user is set by verifyToken middleware
+    const user = await User.findById(req.user.id).select("-password");
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+    res.status(200).json({ success: true, user });
+  } catch (error) {
+    console.error("Me Error:", error);
     res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };

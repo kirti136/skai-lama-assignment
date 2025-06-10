@@ -10,10 +10,14 @@ const PORT = process.env.PORT || 3001;
 
 app.use(
   cors({
-    origin: 'https://skai-lama-assignment-a5pi.vercel.app',
-    methods:['POST','GET','DELETE','PUT','PATCH','OPTIONS'],
+    origin: [
+      "http://localhost:5173",
+      "https://skai-lama-assignment-a5pi.vercel.app",
+      "https://skai-lama-assignment-xi.vercel.app",
+      "https://skai-lama-assignment-aashishkumar321s-projects.vercel.app",
+    ],
+    methods: ["POST", "GET", "DELETE", "PUT", "PATCH", "OPTIONS"],
     credentials: true,
-    
   })
 );
 app.use(express.json());
